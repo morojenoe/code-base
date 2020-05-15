@@ -1,0 +1,21 @@
+{
+  "name": "yandex_qual",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w A.ts",
+    "lite": "lite-server",
+    "start": "concurrently \"npm run tsc:w\" \"npm run lite\" "
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^12.0.2",
+    "concurrently": "^4.1.0",
+    "lite-server": "^2.5.3",
+    "typescript": "^3.4.5"
+  }
+}

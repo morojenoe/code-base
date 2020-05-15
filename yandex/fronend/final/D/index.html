@@ -1,0 +1,109 @@
+
+<html>
+  <head>
+      <meta http-equiv="Content-Security-Policy" content="img-src 'none'">
+      <link rel="stylesheet" href="font.css">
+      <style>
+          body {
+              font: 11px arialregular;
+              margin: 110px 0 0 70px;
+          }
+  
+          .ymaps {
+              width: 500px;
+              transform: rotate(-40deg);
+              overflow: hidden;
+          }
+  
+          .street {
+              position: absolute;
+              left: 17px;
+              top: 0;
+              width: 400px;
+              color: #737167;
+              border-top: solid 1px #dfd9d8;
+              border-bottom: solid 1px #dfd9d8;
+              text-align: center;
+              line-height: 15px;
+              background: white;
+          }
+  
+          .lane {
+              position: absolute;
+              left: 390px;
+              top: -36px;
+              width: 101px;
+              height: 350px;
+          }
+  
+          .house-1, .house-2, .house-3, .house-4, .house-5, .house-6, .entrance {
+              position: relative;
+              width: 320px;
+              height: 80px;
+              background: #f5f1e5;
+          }
+  
+          .house-1 {
+              margin-left: 30px;
+          }
+  
+          .house-4 {
+              width: 420px;
+              margin-top: -140px;
+              margin-left: 50px;
+              transform: rotate(-180deg);
+          }
+  
+          .house-5 {
+              position: absolute;
+              top: 125px;
+              left: 295px;
+              width: 300px;
+              height: 50px;
+              transform: rotate(90deg);
+          }
+  
+          .entrance {
+              top: 50px;
+              left: 150px;
+              width: 40px;
+              height: 40px;
+          }
+  
+          .marker {
+              position: absolute;
+              top: 350px;
+              left: 200px;
+              width: 20px;
+              height: 20px;
+              background: white;
+          }
+      </style>
+      <link rel="stylesheet" href="./solution.css"/>
+  </head>
+  <body>
+      <div class="ymaps">
+          <div class="street">ул. Льва Толстого</div>
+  
+          <div class="house-1">
+              <div class="entrance"></div>
+          </div>
+          <div class="house-2">
+              <div class="entrance"></div>
+          </div>
+          <div class="house-3">
+              <div class="entrance"></div>
+          </div>
+          <div class="house-4">
+              <div class="entrance"></div>
+          </div>
+          <div class="house-5"></div>
+  
+          <div class="marker">Яндекс</div>
+  
+          <div class="lane"></div>
+  
+          <div class="street">ул. Тимура Фрунзе</div>
+      </div>
+  </body>
+  </html>

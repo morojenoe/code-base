@@ -1,0 +1,134 @@
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+        }
+        #map {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            /* background: url(http://localhost:3000/background); */
+        }
+    </style>
+    <script type="text/javascript">
+        
+        let offsets;
+        (function () {
+            function get() {
+                let res = [];
+                // const map = document.querySelector('#map');
+                const xMax = Math.ceil((document.body.offsetWidth + TILE_SIZE) / (2 * TILE_SIZE));
+                const yMax = Math.ceil((document.body.offsetHeight + TILE_SIZE) / (2 * TILE_SIZE));
+                const xOffset = document.body.offsetWidth / 2 - (xMax + 0.5) * TILE_SIZE;
+                const yOffset = document.body.offsetHeight / 2 - (yMax + 0.5) * TILE_SIZE;
+                // let result = Promise.resolve();
+                let x = -xMax;
+                let y = -yMax;
+                let prevImg = undefined;
+                while (x <= xMax && y <= yMax) {
+                    (function (x, y) {
+                        // result = result.then((prevImg) => {
+                            const img = {
+                              style: {
+                                left: 0,
+                                top: 0,
+                              },
+                              width: 0,
+                              height: 0
+                            };
+                            img.width = TILE_SIZE;
+                            img.height = TILE_SIZE;
+                            img.style.position = 'absolute';
+                            if (x === -xMax) {
+                                img.style.left = xOffset;
+                                img.style.top = y === -yMax ? yOffset : prevImg.style.top + TILE_SIZE;
+                            } else {
+                                img.style.left = prevImg.style.left + TILE_SIZE;
+                                img.style.top = prevImg.style.top;
+                            }
+                            res.push([x, y, img.style.left, img.style.top]);
+                            // img.src = `http://localhost:3000/${x}.${y}`;
+                            //const promise = Promise.resolve(img);
+                            // map.appendChild(img);
+                            //return promise;
+                            prevImg = img;
+                          })(x, y);
+                    if (x < xMax) {
+                        x++;
+                    } else {
+                        x = -xMax;
+                        y++;
+                    }
+                }
+                return res;
+            }
+
+            function loadImg(x, y, map) {
+                const img = document.createElement('img');
+                img.width = TILE_SIZE;
+                img.height = TILE_SIZE;
+                img.style.position = 'absolute';
+                let tmp = offsets.find(v => v[0] === x && v[1] === y);
+                if (tmp) {
+                    img.style.left = tmp[2];
+                    img.style.top = tmp[3];
+                }
+
+                let url = `http://localhost:3000/${x}.${y}`
+                img.src = url;
+                // fetch(url, {headers: headers}).then(value => console.log(value));
+                const promise = new Promise(
+                    (resolve) => img.addEventListener('load', () => resolve(img)
+                )).catch(err => img);
+                map.appendChild(img);
+                return promise;
+            }
+
+            const TILE_SIZE = 256;
+            window.onload = async function() {
+                offsets = get();
+                document.getElementById('map').style.background = 'url(http://localhost:3000/background)';            
+
+                const map = document.querySelector('#map');
+                const xMax = Math.ceil((document.body.offsetWidth + TILE_SIZE) / (2 * TILE_SIZE));
+                const yMax = Math.ceil((document.body.offsetHeight + TILE_SIZE) / (2 * TILE_SIZE));
+                const xOffset = document.body.offsetWidth / 2 - (xMax + 0.5) * TILE_SIZE;
+                const yOffset = document.body.offsetHeight / 2 - (yMax + 0.5) * TILE_SIZE;
+                let result = Promise.resolve();
+                let x = -xMax;
+                let y = -yMax;
+
+                let points = [];
+                for (let i = -xMax; i <= xMax; ++i) {
+                  for (let j = -yMax; j <= yMax; ++j) {
+                    points.push([i, j]);
+                  }
+                }
+                points.sort((a, b) => {
+                  let ra = Math.abs(a[0]) + Math.abs(a[1]);
+                  let rb = Math.abs(b[0]) + Math.abs(b[1]);
+                  return ra - rb;
+                });
+
+                let tiles = [];
+                //const CHUNK = 100;
+                for (let i = 0; i < points.length; ++i) {
+                    tiles.push(loadImg(points[i][0], points[i][1], map));
+                    // if (tiles.length >= CHUNK) {
+                    //     await Promise.all(tiles);
+                    //     tiles = [];
+                    // }
+                }
+                // Когда карта полностью готова (загружены все тайлы, в том числе дополнительный "пояс"),
+                // надо вызвать window.onMapReady.
+                Promise.all(tiles).then(window.onMapReady);
+            };
+        })();
+    </script>
+</head>
+<body>
+    <div id="map"></div>
+</body>
+</html>

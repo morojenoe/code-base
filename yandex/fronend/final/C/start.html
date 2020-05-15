@@ -1,0 +1,66 @@
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+        }
+        #map {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background: url(http://localhost:3000/background);
+        }
+    </style>
+    <script type="text/javascript">
+        (function () {
+            const TILE_SIZE = 256;
+            window.onload = function() {
+                const map = document.querySelector('#map');
+                const xMax = Math.ceil((document.body.offsetWidth + TILE_SIZE) / (2 * TILE_SIZE));
+                const yMax = Math.ceil((document.body.offsetHeight + TILE_SIZE) / (2 * TILE_SIZE));
+                const xOffset = document.body.offsetWidth / 2 - (xMax + 0.5) * TILE_SIZE;
+                const yOffset = document.body.offsetHeight / 2 - (yMax + 0.5) * TILE_SIZE;
+                let result = Promise.resolve();
+                let x = -xMax;
+                let y = -yMax;
+                while (x <= xMax && y <= yMax) {
+                    (function (x, y) {
+                        result = result.then((prevImg) => {
+                            const img = document.createElement('img');
+                            img.width = TILE_SIZE;
+                            img.height = TILE_SIZE;
+                            img.style.position = 'absolute';
+                            if (x === -xMax) {
+                                img.style.left = xOffset;
+                                img.style.top = y === -yMax ? yOffset : prevImg.offsetTop + TILE_SIZE;
+                            } else {
+                                img.style.left = prevImg.offsetLeft + TILE_SIZE;
+                                img.style.top = prevImg.offsetTop;
+                            }
+                            img.src = `http://localhost:3000/${x}.${y}`;
+                            const promise = new Promise(
+                                (resolve) => img.addEventListener('load', () => resolve(img)
+                            ));
+                            map.appendChild(img);
+                            return promise;
+                        });
+                    })(x, y);
+                    if (x < xMax) {
+                        x++;
+                    } else {
+                        x = -xMax;
+                        y++;
+                    }
+                }
+                // Когда карта полностью готова (загружены все тайлы, в том числе дополнительный "пояс"),
+                // надо вызвать window.onMapReady.
+                result.then(window.onMapReady);
+            };
+        })();
+    </script>
+</head>
+<body>
+    <div id="map"></div>
+</body>
+</html>
