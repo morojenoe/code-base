@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  },
+  "include": [
+    "./A/A.ts",
+    "./A/A.test.ts"
+  ],
+  "exclude": [
+    "./node_modules/*"
+  ]
+}
